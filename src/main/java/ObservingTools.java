@@ -1,63 +1,45 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
-public class ObservingTools {
+public class ManipulatingTools {
+    TheWorld theWorldInstance = new TheWorld();
+    int[] theWorld = theWorldInstance.getTheWorld();
 
-//    private int[] theWorld;
+    //"Direction = true" to move left, "direction = false" to move right
+    static int[] moveObject(int[] theWorld, boolean direction){
 
-    public ObservingTools() {
-    }
+        int leftLimit = ObservingTools.getLeftSideLength(theWorld);
+        int rightLimit = ObservingTools.getRightSideLength(theWorld);
 
-    //Returns the first object found
-    static ArrayList<Integer> findObject(int[] theWorld) {
-        ArrayList<Integer> object = new ArrayList<>();
-        boolean objectIsFound = false;
-        for (int obj : theWorld) {
-            if (!(obj == 0)) {
-                object.add(obj);
-                objectIsFound = true;
-            }
-            if (objectIsFound && obj == 0) {
-                break;
-            }
-        }
-        return object;
-    }
-
-    public static int getLeftSideLength(int[] theWorld) {
-        int leftZeros = 0;
-        for (int elem : theWorld) {
-//            System.out.println("leftZeros: " + leftZeros);
-            if (elem == 0) {
-                leftZeros++;
+        if (direction) {
+            if (leftLimit > 0) {
+                theWorld = change0To1orViceVersa(theWorld, leftLimit - 1);
+                theWorld = change0To1orViceVersa(theWorld, theWorld.length - rightLimit - 1);
             } else {
-                break;
+                somethingIsWrongWithTheLimits();
             }
-        }
-        return leftZeros;
-    }
-
-    private static int getRightSideLength(int[] theWorld) {
-        int rightZeros = 0;
-        int[] clonedWorld = theWorld.clone();
-        List<Integer> list = Arrays.stream(clonedWorld)
-                .boxed()
-                .collect(Collectors.toList());
-        Collections.reverse(list);
-        for (int elem : theWorld) {
-            if (elem == 0) {
-                rightZeros++;
+        } else {
+            if (rightLimit > 0) {
+                theWorld = change0To1orViceVersa(theWorld, theWorld.length - rightLimit);
+                theWorld = change0To1orViceVersa(theWorld, leftLimit);
             } else {
-                break;
+                somethingIsWrongWithTheLimits();
             }
         }
-        return rightZeros;
+
+        return theWorld;
     }
 
-    static int getObjectLength(int[] theWorld) {
-        return findObject(TheWorld.getTheWorld()).size();
+    static int[] change0To1orViceVersa(int[] theWorld, int index){
+
+        if (theWorld[index] == 0) {
+            theWorld[index] = 1;
+        } else {
+            theWorld[index] = 0;
+        }
+
+        return theWorld;
+    }
+
+    static void somethingIsWrongWithTheLimits() {
+        System.out.println("something's wrong with the limits");
     }
 }
