@@ -1,41 +1,46 @@
-class ManipulatingTools {
 
-    int[] theWorld = TheWorld.getTheWorld();
-/*
-    TheWorld theWorld = new TheWorld(theNewWorld);
-    private int[] theWorld000 = theWorld.getTheWorld();
-*/
 
-    void changeElement(int i) {
-        if (theWorld[i] == 0) {
-            theWorld[i] = 1;
+public class ManipulatingTools {
+    TheWorld theWorldInstance = new TheWorld();
+    int[] theWorld = theWorldInstance.getTheWorld();
+
+    //"Direction = true" to move left, "direction = false" to move right
+    static int[] moveObject(int[] theWorld, boolean direction){
+
+        int leftLimit = ObservingTools.getLeftSideLength(theWorld);
+        int rightLimit = ObservingTools.getRightSideLength(theWorld);
+
+        if (direction) {
+            if (leftLimit > 0) {
+                theWorld = change0To1orViceVersa(theWorld, leftLimit - 1);
+                theWorld = change0To1orViceVersa(theWorld, theWorld.length - rightLimit - 1);
+            } else {
+                somethingIsWrongWithTheLimits();
+            }
         } else {
-            theWorld[i] = 0;
+            if (rightLimit > 0) {
+                theWorld = change0To1orViceVersa(theWorld, theWorld.length - rightLimit);
+                theWorld = change0To1orViceVersa(theWorld, leftLimit);
+            } else {
+                somethingIsWrongWithTheLimits();
+            }
         }
-//        TheWorld.setTheWorld(fdhg);
+
+        return theWorld;
     }
 
-    void moveLeft() {
-        for (int dgdfg : theWorld) {
-            System.out.print(dgdfg);
+    static int[] change0To1orViceVersa(int[] theWorld, int index){
+
+        if (theWorld[index] == 0) {
+            theWorld[index] = 1;
+        } else {
+            theWorld[index] = 0;
         }
-        System.out.println();
 
-        int objectLength = ObservingTools.getObjectLength(theWorld);
-        int leftSideLength = ObservingTools.getLeftSideLength(theWorld);
-        System.out.println("objectLength: " + objectLength);
-        System.out.println("leftSideLength: " + leftSideLength);
-
-//!!        предусмотреть случай leftSideLength = 0
-        changeElement(leftSideLength - 1);
-        changeElement(leftSideLength + objectLength - 1);
-
-        for (int dgdfg : theWorld) {
-            System.out.print(dgdfg);
-        }
+        return theWorld;
     }
 
-
-
-
+    static void somethingIsWrongWithTheLimits() {
+        System.out.println("something's wrong with the limits");
+    }
 }
